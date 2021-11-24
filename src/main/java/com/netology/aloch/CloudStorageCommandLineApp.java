@@ -1,7 +1,7 @@
 package com.netology.aloch;
 
-import com.netology.aloch.entity.File;
-import com.netology.aloch.entity.User;
+import com.netology.aloch.entity.FileMyDB;
+import com.netology.aloch.entity.UserMyDB;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +23,7 @@ public class CloudStorageCommandLineApp implements CommandLineRunner {
         var passwords = List.of("pass1", "pass2", "pass3", "pass4", "pass5");
 
         for (int i = 0; i < names.size(); i++) {
-            var user = User.builder()
+            var user = UserMyDB.builder()
                     .username(names.get(i))
                     .password(passwords.get(i))
                     .build();
@@ -31,9 +31,10 @@ public class CloudStorageCommandLineApp implements CommandLineRunner {
         }
 
         for (int i = 0; i < 5; i++) {
-            var file = File.builder()
-                    .filename("filename"+i)
-                    .data(new byte[] {(byte) i})
+            var file = FileMyDB.builder()
+                    .name("filename"+i)
+                    .type("text/plain")
+                    .data(new byte[] {(byte) (i*100)})
                     .build();
             entityManager.persist(file);
         }

@@ -7,8 +7,8 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name="USERS")
-public class User {
+@Entity(name="users")
+public class UserMyDB {
 
     @Id
     @Column(unique = true, nullable = false)
