@@ -12,11 +12,12 @@ import javax.persistence.*;
 @Entity(name = "files")
 public class FileMyDB {
 
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+//    @Id
+//    @GeneratedValue(generator = "uuid")
+//    @GenericGenerator(name = "uuid", strategy = "uuid2")
+//    private String id;
 
+    @Id
     @Column(nullable = false)
     private String name;
     
@@ -25,11 +26,15 @@ public class FileMyDB {
     @Lob
     private byte[] data;
 
-    public FileMyDB(String fileName, String contentType, byte[] bytes) {
-        this.name = fileName;
-        this.type = contentType;
-        this.data = bytes;
+    public String getId() {
+        return name;
     }
+
+//    public FileMyDB(String fileName, String contentType, byte[] bytes) {
+//        this.name = fileName;
+//        this.type = contentType;
+//        this.data = bytes;
+//    }
 
 
 }

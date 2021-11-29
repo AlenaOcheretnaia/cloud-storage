@@ -1,7 +1,6 @@
 package com.netology.aloch.service;
 
 import com.netology.aloch.entity.FileMyDB;
-import com.netology.aloch.repository.CloudStorageRepository;
 import com.netology.aloch.repository.FileDBRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,8 +15,6 @@ public class FileStorageService {
 
     @Autowired
     private FileDBRepository fileDBRepository;
-    @Autowired
-    private CloudStorageRepository cloudStorageRepository;
 
     public FileMyDB store(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -25,10 +22,9 @@ public class FileStorageService {
         return fileDBRepository.save(FileDB);
     }
 
-//    public FileMyDB getFile(String name) {
-//        String fileId = cloudStorageRepository.getFileIdByName(name);
-//        return fileDBRepository.findById(fileId).get();
-//    }
+    public FileMyDB getFile(String id) {
+        return fileDBRepository.findById(id).get();
+    }
 
     public Stream<FileMyDB> getAllFiles() {
         return fileDBRepository.findAll().stream();

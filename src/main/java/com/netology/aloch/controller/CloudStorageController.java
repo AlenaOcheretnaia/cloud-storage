@@ -1,27 +1,27 @@
 package com.netology.aloch.controller;
 
+import com.netology.aloch.entity.FileMyDB;
 import com.netology.aloch.message.ResponseFile;
 import com.netology.aloch.message.ResponseMessage;
-import com.netology.aloch.service.CloudStorageService;
 import com.netology.aloch.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
 public class CloudStorageController {
-    @Autowired
-    private final CloudStorageService cloudStorageService;
+
     @Autowired
     private FileStorageService storageService;
 
-    public CloudStorageController(CloudStorageService cloudStorageService, FileStorageService fileStorageService) {
-        this.cloudStorageService = cloudStorageService;
+    public CloudStorageController(FileStorageService fileStorageService) {
         this.storageService = fileStorageService;
     }
 
@@ -45,11 +45,18 @@ public class CloudStorageController {
     }
 
     //Get list of files
-    @GetMapping("/list")
+    @GetMapping("/files")
     public ResponseEntity<List<ResponseFile>> getListFiles() {
         List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
+            String fileDownloadUri = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path("/files/")
+                    .path(dbFile.getId())
+                    .toUriString();
+
             return new ResponseFile(
                     dbFile.getName(),
+                    fileDownloadUri,
                     dbFile.getType(),
                     dbFile.getData().length);
         }).collect(Collectors.toList());
@@ -57,5 +64,14 @@ public class CloudStorageController {
         return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
+    //Download file from server
+    @GetMapping("/files/{fileName}")
+    public ResponseEntity<byte[]> getFile(@PathVariable String fileName) {
+        FileMyDB fileDB = storageService.getFile(fileName);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
+                .body(fileDB.getData());
+    }
 
 }
