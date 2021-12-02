@@ -12,9 +12,12 @@ public class UserMyDB {
 
     @Id
     @Column(unique = true, nullable = false)
-    private String username;
+    private String login;
 
     @Column(nullable = false)
     private String password;
+
+    @Column(unique = true)
+    private String token;
 
 }

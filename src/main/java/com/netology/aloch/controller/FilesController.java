@@ -16,12 +16,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-public class CloudStorageController {
+public class FilesController {
 
     @Autowired
     private FileStorageService storageService;
 
-    public CloudStorageController(FileStorageService fileStorageService) {
+    public FilesController(FileStorageService fileStorageService) {
         this.storageService = fileStorageService;
     }
 
@@ -45,7 +45,7 @@ public class CloudStorageController {
     }
 
     //Get list of files
-    @GetMapping("/files")
+    @GetMapping("/list")
     public ResponseEntity<List<ResponseFile>> getListFiles() {
         List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
             String fileDownloadUri = ServletUriComponentsBuilder
