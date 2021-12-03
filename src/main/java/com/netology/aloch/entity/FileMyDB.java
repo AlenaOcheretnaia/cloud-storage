@@ -30,11 +30,5 @@ public class FileMyDB {
         return name;
     }
 
-//    public FileMyDB(String fileName, String contentType, byte[] bytes) {
-//        this.name = fileName;
-//        this.type = contentType;
-//        this.data = bytes;
-//    }
-
 
 }

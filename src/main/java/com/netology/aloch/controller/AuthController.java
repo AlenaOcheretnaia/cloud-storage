@@ -14,42 +14,28 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*", allowCredentials = "true")
 @RestController
 public class AuthController {
 
-
     @RequestMapping("hello")
-    public String helloWorld(@RequestParam(value="name", defaultValue="World") String name) {
-        return "Hello "+name+"!!";
+    public String helloWorld(@RequestParam(value = "name", defaultValue = "World") String name) {
+        return "Hello " + name + "!!";
     }
 
-//    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-//    public ResponseEntity options(HttpServletResponse response) {
-//        //log.info("OPTIONS /foo called");
-//        //response.setHeader("Allow", "HEAD,GET,PUT,OPTIONS");
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
+    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+    public ResponseEntity login(HttpServletResponse response) {
+        return new ResponseEntity(HttpStatus.OK);
+    }
 
-    //@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "Access-Control-Allow-Origin", allowCredentials = "true")
     @PostMapping("/login")
-    //@RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-    public UserMyDB login(@RequestParam("login") String login, @RequestParam("password") String pwd) {
-
-        String token = getJWTToken(login);
+    public UserMyDB login() {
+        String token = getJWTToken("login");
         UserMyDB user = new UserMyDB();
-        user.setLogin(login);
+        user.setLogin("login");
         user.setToken(token);
         return user;
 
     }
-
-//    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-//    public int login() {
-//
-//        return 200;
-//
-//    }
 
     private String getJWTToken(String username) {
         String secretKey = "mySecretKey";

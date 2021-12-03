@@ -16,45 +16,42 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class CloudStorageApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(CloudStorageApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(CloudStorageApplication.class, args);
+    }
 
-	@EnableWebSecurity
-	@Configuration
-	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    @EnableWebSecurity
+    @Configuration
+    class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable()
-					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-					.authorizeRequests()
-					.antMatchers(HttpMethod.POST, "/login").permitAll()
-					.anyRequest().authenticated();
-		}
-	}
+        @Override
+        protected void configure(HttpSecurity http) throws Exception {
+            http.csrf().disable()
+                    .addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+                    .authorizeRequests()
+                    .antMatchers(HttpMethod.POST, "/login").permitAll()
+                    .antMatchers(HttpMethod.OPTIONS, "/*").permitAll()
+                    .anyRequest().authenticated();
+        }
+    }
 
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
 
-			@Override
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-						.allowedOrigins("http://localhost:8080")
-						.allowedMethods("GET", "POST", "OPTIONS", "PUT")
-						.allowedHeaders("Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
-								"Access-Control-Request-Headers")
-						.exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
-						.allowCredentials(true).maxAge(3600);
-//				registry.addMapping("/**")
-//						.allowCredentials(true)
-//						.allowedOrigins("http://localhost:8080");
-			}
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("http://localhost:8080")
+                        .allowedMethods("GET", "POST", "OPTIONS", "PUT")
+                        .allowedHeaders("Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method",
+                                "Access-Control-Request-Headers")
+                        .exposedHeaders("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials")
+                        .allowCredentials(true).maxAge(3600);
+            }
 
-		};
-	}
-
+        };
+    }
 
 
 }
