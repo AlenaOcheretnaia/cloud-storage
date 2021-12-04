@@ -1,8 +1,13 @@
 package com.netology.aloch.controller;
 
-import com.netology.aloch.entity.UserMyDB;
+import com.netology.aloch.model.ErrorApp;
+import com.netology.aloch.model.LoginForm;
+import com.netology.aloch.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
@@ -17,25 +22,36 @@ import java.util.stream.Collectors;
 @RestController
 public class AuthController {
 
-    @RequestMapping("hello")
-    public String helloWorld(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return "Hello " + name + "!!";
-    }
+    @Autowired
+    private UserService userService;
 
+    //preflight request
     @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-    public ResponseEntity login(HttpServletResponse response) {
+    public ResponseEntity loginPreflight(HttpServletResponse response) {
         return new ResponseEntity(HttpStatus.OK);
     }
 
+    //login
     @PostMapping("/login")
-    public UserMyDB login() {
-        String token = getJWTToken("login");
-        UserMyDB user = new UserMyDB();
-        user.setLogin("login");
-        user.setToken(token);
-        return user;
+    public ResponseEntity loginCheck(@RequestBody LoginForm loginForm) throws JSONException {
+        System.out.println("Login = " + loginForm.getLogin() + ", password = " + loginForm.getPassword());
+        if (userService.checkUserDB(loginForm.getLogin(), loginForm.getPassword())) {
+            String token = getJWTToken(loginForm.getLogin());
+            JSONObject resp = new JSONObject();
+            resp.put("auth-token", token);
+            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ErrorApp("Bad credentials", 400));
+        }
+    }
+
+
+    @PostMapping("/logout")
+    public void logoutUser() {
 
     }
+
 
     private String getJWTToken(String username) {
         String secretKey = "mySecretKey";

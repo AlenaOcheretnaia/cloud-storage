@@ -1,7 +1,6 @@
-package com.netology.aloch.entity;
+package com.netology.aloch.model;
 
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -11,11 +10,6 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity(name = "files")
 public class FileMyDB {
-
-//    @Id
-//    @GeneratedValue(generator = "uuid")
-//    @GenericGenerator(name = "uuid", strategy = "uuid2")
-//    private String id;
 
     @Id
     @Column(nullable = false)

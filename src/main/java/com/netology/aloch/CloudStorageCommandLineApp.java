@@ -1,7 +1,7 @@
 package com.netology.aloch;
 
-import com.netology.aloch.entity.FileMyDB;
-import com.netology.aloch.entity.UserMyDB;
+import com.netology.aloch.model.FileMyDB;
+import com.netology.aloch.model.UserMyDB;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 

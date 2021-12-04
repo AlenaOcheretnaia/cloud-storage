@@ -1,6 +1,6 @@
 package com.netology.aloch.service;
 
-import com.netology.aloch.entity.FileMyDB;
+import com.netology.aloch.model.FileMyDB;
 import com.netology.aloch.repository.FileDBRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

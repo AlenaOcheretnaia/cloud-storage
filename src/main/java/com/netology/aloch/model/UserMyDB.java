@@ -1,4 +1,4 @@
-package com.netology.aloch.entity;
+package com.netology.aloch.model;
 
 import lombok.*;
 import javax.persistence.*;
