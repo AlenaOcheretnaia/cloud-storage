@@ -20,16 +20,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin("http://localhost:8080")
 public class AuthController {
 
     @Autowired
     private UserService userService;
 
-    //preflight request
-    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-    public ResponseEntity loginPreflight(HttpServletResponse response) {
-        return new ResponseEntity(HttpStatus.OK);
-    }
+//    //preflight login request
+//    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
+//    public ResponseEntity loginPreflight(HttpServletResponse response) {
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
     //login
     @PostMapping("/login")
@@ -37,6 +38,7 @@ public class AuthController {
         System.out.println("Login = " + loginForm.getLogin() + ", password = " + loginForm.getPassword());
         if (userService.checkUserDB(loginForm.getLogin(), loginForm.getPassword())) {
             String token = getJWTToken(loginForm.getLogin());
+            userService.assignTokenToUser(loginForm.getLogin(), token);
             JSONObject resp = new JSONObject();
             resp.put("auth-token", token);
             return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
@@ -46,12 +48,21 @@ public class AuthController {
         }
     }
 
+//    //preflight logout request
+//    @RequestMapping(value = "/logout", method = RequestMethod.OPTIONS)
+//    public ResponseEntity logoutPreflight(HttpServletResponse response) {
+//        return new ResponseEntity(HttpStatus.OK);
+//    }
 
     @PostMapping("/logout")
-    public void logoutUser() {
-
+    public ResponseEntity logoutUser(@RequestHeader("auth-token") String token) {
+        if (!token.isEmpty()) {
+            userService.unAssignToken(token);
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+        }
     }
-
 
     private String getJWTToken(String username) {
         String secretKey = "mySecretKey";

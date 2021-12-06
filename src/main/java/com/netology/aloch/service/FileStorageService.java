@@ -22,9 +22,9 @@ public class FileStorageService {
         return fileDBRepository.save(FileDB);
     }
 
-    public FileMyDB getFile(String id) {
-        return fileDBRepository.findById(id).get();
-    }
+//    public FileMyDB getFile(Integer id) {
+//        return fileDBRepository.findById(id).get();
+//    }
 
     public Stream<FileMyDB> getAllFiles() {
         return fileDBRepository.findAll().stream();

@@ -1,31 +1,36 @@
 package com.netology.aloch.repository;
 
 import com.netology.aloch.model.UserMyDB;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import java.util.List;
+import java.util.Optional;
 
-
+@Qualifier("user")
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<UserMyDB, String> {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    Optional<UserMyDB> findByLoginAndPassword(String login, String password);
 
-    public boolean checkUserDB(String login, String pwd) {
-        List<UserMyDB> result = entityManager
-                .createQuery("select u from users u where u.login = :login and u.password = :password", UserMyDB.class)
-                .setParameter("login", login)
-                .setParameter("password", pwd)
-                .getResultList();
+    Optional<UserMyDB> findById(String login);
 
-        if (result.size() != 0) {
-            return true;
-        } else
-            return false;
-    }
+    Optional<UserMyDB> findByToken(String token);
 
+//    @Modifying
+//    @Query("update users u set u.token = :token where u.login = :login")
+//    void updateToken(@Param(value = "login") String login, @Param(value="token") String token);
+//
+//    public void updateUserToken(String login, String token) {
+//        updateToken(login, token);
+//    }
 
+//    void updateToken(String login, String token) {
+//        UserMyDB user = findByLogin(login).get();
+//        user.setToken(token);
+//        UserRepository.save(user);
+//    }
 }

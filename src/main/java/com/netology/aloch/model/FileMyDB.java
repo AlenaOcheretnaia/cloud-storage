@@ -12,6 +12,9 @@ import javax.persistence.*;
 public class FileMyDB {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @Column(nullable = false)
     private String name;
     
@@ -24,5 +27,9 @@ public class FileMyDB {
         return name;
     }
 
-
+    public FileMyDB(String name, String type, byte[] data) {
+        this.name = name;
+        this.type = type;
+        this.data = data;
+    }
 }

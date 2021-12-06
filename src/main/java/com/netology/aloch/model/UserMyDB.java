@@ -17,7 +17,8 @@ public class UserMyDB {
     @Column(nullable = false)
     private String password;
 
-    @Column(unique = true)
+   // @Column(unique = true, default = "")
+    @Column(unique = true, columnDefinition = "varchar(255) default ''")
     private String token;
 
 }

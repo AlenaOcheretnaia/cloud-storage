@@ -31,6 +31,7 @@ public class FilesController {
         return "Hello from Cloud Storage by AlOch";
     }
 
+    //preflight list
     @RequestMapping(value = "/list", method = RequestMethod.OPTIONS)
     public ResponseEntity listPreflight(HttpServletResponse response) {
         return new ResponseEntity(HttpStatus.OK);
@@ -71,13 +72,13 @@ public class FilesController {
     }
 
     // *** Download file from server ***
-    @GetMapping("/files/{fileName}")
-    public ResponseEntity<byte[]> getFile(@PathVariable String fileName) {
-        FileMyDB fileDB = storageService.getFile(fileName);
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
-                .body(fileDB.getData());
-    }
+//    @GetMapping("/files/{fileName}")
+//    public ResponseEntity<byte[]> getFile(@PathVariable String fileName) {
+//        FileMyDB fileDB = storageService.getFile(fileName);
+//
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
+//                .body(fileDB.getData());
+//    }
 
 }
