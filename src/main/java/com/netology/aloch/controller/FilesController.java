@@ -1,22 +1,19 @@
 package com.netology.aloch.controller;
 
-import com.netology.aloch.model.FileMyDB;
 import com.netology.aloch.message.ResponseFile;
 import com.netology.aloch.message.ResponseMessage;
 import com.netology.aloch.service.FileStorageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8080")
 public class FilesController {
 
     @Autowired
@@ -27,28 +24,24 @@ public class FilesController {
     }
 
     @GetMapping("/")
-    public String hello(){
+    public String hello() {
         return "Hello from Cloud Storage by AlOch";
-    }
-
-    //preflight list
-    @RequestMapping(value = "/list", method = RequestMethod.OPTIONS)
-    public ResponseEntity listPreflight(HttpServletResponse response) {
-        return new ResponseEntity(HttpStatus.OK);
     }
 
     // *** Upload file to Server ***
     @PostMapping("/file")
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("filename") MultipartFile file) {
+    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("filename") String fileName) {
         String message = "";
-        try {
-            storageService.store(file);
-            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-        } catch (Exception e) {
-            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-        }
+        System.out.println(fileName);
+        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+//        try {
+//            storageService.store(file);
+//            message = "Uploaded the file successfully: " + file.getOriginalFilename();
+//            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
+//        } catch (Exception e) {
+//            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
+//            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+//        }
     }
 
     // *** Get list of files ***

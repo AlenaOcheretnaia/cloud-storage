@@ -11,18 +11,13 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean checkUserDB(String login, String password){
-        //return userRepositoryImpl.checkUserDB(name, pwd);
+    public boolean checkUserDB(String login, String password) {
         if (userRepository.findByLoginAndPassword(login, password).isEmpty()) {
             return false;
         } else {
             return true;
         }
     }
-
-//    public void assignTokenToUser(String login, String token) {
-//        UserRepository.updateUserToken(login, token);
-//    }
 
     public void assignTokenToUser(String login, String token) {
         UserMyDB user = userRepository.findById(login).get();
@@ -32,7 +27,7 @@ public class UserService {
 
     public void unAssignToken(String token) {
         UserMyDB user = userRepository.findByToken(token).get();
-        user.setToken(null);
+        user.setToken("");
         userRepository.save(user);
     }
 }

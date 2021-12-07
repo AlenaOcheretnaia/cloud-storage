@@ -14,23 +14,16 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin("http://localhost:8080")
+@CrossOrigin(origins = "http://localhost:8080")
 public class AuthController {
 
     @Autowired
     private UserService userService;
-
-//    //preflight login request
-//    @RequestMapping(value = "/login", method = RequestMethod.OPTIONS)
-//    public ResponseEntity loginPreflight(HttpServletResponse response) {
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 
     //login
     @PostMapping("/login")
@@ -47,12 +40,6 @@ public class AuthController {
                     .body(new ErrorApp("Bad credentials", 400));
         }
     }
-
-//    //preflight logout request
-//    @RequestMapping(value = "/logout", method = RequestMethod.OPTIONS)
-//    public ResponseEntity logoutPreflight(HttpServletResponse response) {
-//        return new ResponseEntity(HttpStatus.OK);
-//    }
 
     @PostMapping("/logout")
     public ResponseEntity logoutUser(@RequestHeader("auth-token") String token) {

@@ -38,21 +38,19 @@ public class CloudStorageCommandLineApp implements CommandLineRunner {
 
         for (int i = 0; i < 5; i++) {
             var file = FileMyDB.builder()
-                    .name("filename"+(i+1))
+                    .name("filename" + (i + 1))
                     .type("text/plain")
-                    .data(new byte[] {(byte) (i*100)})
+                    .data(new byte[]{(byte) (i * 100)})
                     .build();
             entityManager.persist(file);
 
             var content = UserFiles.builder()
                     .userName(users.get(i))
-                    .fileId(i+1)
+                    .fileId(i + 1)
                     .build();
             entityManager.persist(content);
 
         }
-
-
 
     }
 

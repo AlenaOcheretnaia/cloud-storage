@@ -17,7 +17,7 @@ public class FileMyDB {
 
     @Column(nullable = false)
     private String name;
-    
+
     private String type;
 
     @Lob
