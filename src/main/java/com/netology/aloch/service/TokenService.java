@@ -16,8 +16,22 @@ public class TokenService {
         tokenRepository.save(userToken);
     }
 
+    public void unassignToken(String token) {
+        tokenRepository.deleteByToken(token);
+    }
+
     public String findUserByToken(String token) {
         UserToken userToken = tokenRepository.findByToken(token).get();
         return userToken.getUsername();
     }
+
+    public boolean checkToken(String tokenReq) {
+        try {
+            tokenRepository.findByToken(tokenReq).get();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
 }

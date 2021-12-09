@@ -36,7 +36,7 @@ public class CloudStorageCommandLineApp implements CommandLineRunner {
 
         for (int i = 0; i < 5; i++) {
             var file = FileMyDB.builder()
-                    .filename("filename" + (i + 1)+".txt")
+                    .filename("filename" + (i + 1) + ".txt")
                     .type("text/plain")
                     .data(new byte[]{(byte) (i * 10000)})
                     .username(users.get(i))

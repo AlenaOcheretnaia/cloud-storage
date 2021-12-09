@@ -1,6 +1,7 @@
 package com.netology.aloch.repository;
 
 import com.netology.aloch.model.UserMyDB;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -13,6 +14,6 @@ public interface UserRepository extends JpaRepository<UserMyDB, String> {
 
     Optional<UserMyDB> findByLoginAndPassword(String login, String password);
 
-    Optional<UserMyDB> findById(String login);
+    UserMyDB findByLogin(String login);
 
 }

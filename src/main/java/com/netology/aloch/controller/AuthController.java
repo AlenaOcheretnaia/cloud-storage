@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -48,18 +47,19 @@ public class AuthController {
         }
     }
 
-//    @PostMapping("/logout")
-//    public ResponseEntity logoutUser(@RequestHeader("auth-token") String token) {
-//        if (!token.isEmpty()) {
-//            userService.unAssignToken(token);
-//            return new ResponseEntity<>(HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        }
-//    }
+    @PostMapping("/logout")
+    public ResponseEntity logoutUser() {
+            return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity loginLogoutUser(@RequestHeader("auth-token") String token) {
+        tokenService.unassignToken(token);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     private String getJWTToken(String username) {
-        String secretKey = "mySecretKey";
+        String secretKey = "SecretAlOch";
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils
                 .commaSeparatedStringToAuthorityList("ROLE_USER");
 

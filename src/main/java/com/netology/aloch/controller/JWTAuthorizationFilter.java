@@ -9,6 +9,9 @@
 //import javax.servlet.http.HttpServletRequest;
 //import javax.servlet.http.HttpServletResponse;
 //
+//import com.netology.aloch.repository.TokenRepository;
+//import com.netology.aloch.service.TokenService;
+//import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 //import org.springframework.security.core.authority.SimpleGrantedAuthority;
 //import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,50 +25,30 @@
 //
 //public class JWTAuthorizationFilter extends OncePerRequestFilter {
 //
-//    private final String HEADER = "Authorization";
+//    private final String HEADER = "auth-token";
 //    private final String PREFIX = "Bearer ";
-//    private final String SECRET = "mySecretKey";
+//    private final String SECRET = "SecretAlOch";
+//
+//    @Autowired
+//    private TokenService tokenService;
 //
 //    @Override
 //    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 //        try {
-//            if (checkJWTToken(request, response)) {
-//                Claims claims = validateToken(request);
-//                if (claims.get("authorities") != null) {
-//                    setUpSpringAuthentication(claims);
-//                } else {
-//                    SecurityContextHolder.clearContext();
-//                }
-//            }else {
-//                SecurityContextHolder.clearContext();
-//            }
-//            chain.doFilter(request, response);
+//            String authenticationHeader = request.getHeader(HEADER);
+//            if (authenticationHeader == null || !tokenService.checkToken(authenticationHeader)) {
+//                String username = tokenService.findUserByToken(authenticationHeader);
+//            } else
+//                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 //        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
 //            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 //            return;
 //        }
 //    }
 //
-//    private Claims validateToken(HttpServletRequest request) {
-//        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
-//        return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
-//    }
-//
-//    //Authentication method in Spring flow
-//    private void setUpSpringAuthentication(Claims claims) {
-//        @SuppressWarnings("unchecked")
-//        List<String> authorities = (List) claims.get("authorities");
-//
-//        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
-//                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
-//        SecurityContextHolder.getContext().setAuthentication(auth);
-//
-//    }
-//
 //    private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
 //        String authenticationHeader = request.getHeader(HEADER);
-//        if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX))
+//        if (authenticationHeader == null || !tokenService.checkToken(authenticationHeader))
 //            return false;
 //        return true;
 //    }

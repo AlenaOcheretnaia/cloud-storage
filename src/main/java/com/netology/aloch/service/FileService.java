@@ -43,4 +43,14 @@ public class FileService {
     public List<FileMyDB> getFilesByUser(String userName) {
         return fileRepository.findByUsername(userName);
     }
+
+    public void deleteFileByFilename(String filename, String username) {
+        fileRepository.deleteByFilenameAndUsername(filename, username);
+    }
+
+    public void editFilename(String oldFilename, String newFilename, String username) {
+        FileMyDB fileDB = fileRepository.findByFilenameAndUsername(oldFilename, username).get(0);
+        fileDB.setFilename(newFilename);
+        fileRepository.save(fileDB);
+    }
 }

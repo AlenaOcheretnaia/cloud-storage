@@ -1,7 +1,6 @@
 package com.netology.aloch.model;
 
 import lombok.*;
-
 import javax.persistence.*;
 
 @Data

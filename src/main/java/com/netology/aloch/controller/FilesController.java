@@ -1,7 +1,7 @@
 package com.netology.aloch.controller;
 
 import com.google.gson.Gson;
-import com.netology.aloch.message.ResponseMessage;
+import com.netology.aloch.model.ResponseMessage;
 import com.netology.aloch.model.FileForList;
 import com.netology.aloch.model.FileMyDB;
 import com.netology.aloch.service.FileService;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -34,22 +35,6 @@ public class FilesController {
         return "Hello from Cloud Storage by AlOch";
     }
 
-    // *** Upload file to Server ***
-    @PostMapping("/file")
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("filename") String fileName,
-                                                      @RequestPart("file") MultipartFile file,
-                                                      @RequestHeader("auth-token") String token) {
-        String message = "";
-        try {
-            fileService.store(file, token);
-            message = "Uploaded the file successfully: " + fileName;
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (Exception e) {
-            message = "Could not upload the file: " + fileName + "!";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-        }
-    }
-
     // *** Get list of files ***
     @GetMapping("/list")
     public ResponseEntity getListFiles(@RequestParam int limit,
@@ -66,6 +51,33 @@ public class FilesController {
 
     }
 
+    // *** Edit Filename ***
+    @PutMapping("/file")
+    public ResponseEntity editFilename(@RequestParam("filename") String oldFilename,
+                                       @RequestHeader("auth-token") String token,
+                                       @RequestBody HashMap<String, String> values) {
+        String newFilename = values.get("filename");
+        String username = tokenService.findUserByToken(token);
+        fileService.editFilename(oldFilename, newFilename, username);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // *** Upload file to Server ***
+    @PostMapping("/file")
+    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("filename") String fileName,
+                                                      @RequestPart("file") MultipartFile file,
+                                                      @RequestHeader("auth-token") String token) {
+        String message = "";
+        try {
+            fileService.store(file, token);
+            message = "Uploaded the file successfully: " + fileName;
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            message = "Could not upload the file: " + fileName + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+        }
+    }
+
     // *** Download file from server ***
     @GetMapping("/file")
     public ResponseEntity<byte[]> getFile(@RequestParam String filename,
@@ -78,9 +90,12 @@ public class FilesController {
                 .body(fileDB.getData());
     }
 
+    // *** Delete file from server ***
     @DeleteMapping("/file")
     public ResponseEntity deleteFile(@RequestParam String filename,
                                      @RequestHeader("auth-token") String token) {
+        String username = tokenService.findUserByToken(token);
+        fileService.deleteFileByFilename(filename, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
