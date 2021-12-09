@@ -36,9 +36,12 @@ public class CloudStorageApplication {
                     .authorizeRequests()
                     .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/logout").permitAll()
                     .antMatchers(HttpMethod.GET, "/list").permitAll()
-                    .antMatchers(HttpMethod.POST, "/file").permitAll()
+                    //.antMatchers(HttpMethod.POST, "/file").permitAll()
+                    .antMatchers(HttpMethod.GET, "/file").permitAll()
+                    .antMatchers(HttpMethod.DELETE, "/file").permitAll()
                     .anyRequest().authenticated();
         }
 

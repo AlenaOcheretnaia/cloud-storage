@@ -1,26 +1,32 @@
 package com.netology.aloch.controller;
 
-import com.netology.aloch.message.ResponseFile;
+import com.google.gson.Gson;
 import com.netology.aloch.message.ResponseMessage;
-import com.netology.aloch.service.FileStorageService;
+import com.netology.aloch.model.FileForList;
+import com.netology.aloch.model.FileMyDB;
+import com.netology.aloch.service.FileService;
+import com.netology.aloch.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
 public class FilesController {
 
     @Autowired
-    private FileStorageService storageService;
+    private FileService fileService;
+    @Autowired
+    private TokenService tokenService;
 
-    public FilesController(FileStorageService fileStorageService) {
-        this.storageService = fileStorageService;
+    public FilesController(FileService fileStorageService) {
+        this.fileService = fileStorageService;
     }
 
     @GetMapping("/")
@@ -30,48 +36,51 @@ public class FilesController {
 
     // *** Upload file to Server ***
     @PostMapping("/file")
-    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("filename") String fileName) {
+    public ResponseEntity<ResponseMessage> uploadFile(@RequestParam("filename") String fileName,
+                                                      @RequestPart("file") MultipartFile file,
+                                                      @RequestHeader("auth-token") String token) {
         String message = "";
-        System.out.println(fileName);
-        return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-//        try {
-//            storageService.store(file);
-//            message = "Uploaded the file successfully: " + file.getOriginalFilename();
-//            return ResponseEntity.status(HttpStatus.OK).body(new ResponseMessage(message));
-//        } catch (Exception e) {
-//            message = "Could not upload the file: " + file.getOriginalFilename() + "!";
-//            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
-//        }
+        try {
+            fileService.store(file, token);
+            message = "Uploaded the file successfully: " + fileName;
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            message = "Could not upload the file: " + fileName + "!";
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
+        }
     }
 
     // *** Get list of files ***
     @GetMapping("/list")
-    public ResponseEntity<List<ResponseFile>> getListFiles() {
-        List<ResponseFile> files = storageService.getAllFiles().map(dbFile -> {
-            String fileDownloadUri = ServletUriComponentsBuilder
-                    .fromCurrentContextPath()
-                    .path("/files/")
-                    .path(dbFile.getId())
-                    .toUriString();
+    public ResponseEntity getListFiles(@RequestParam int limit,
+                                       @RequestHeader("auth-token") String token) {
 
-            return new ResponseFile(
-                    dbFile.getName(),
-                    fileDownloadUri,
-                    dbFile.getType(),
-                    dbFile.getData().length);
-        }).collect(Collectors.toList());
+        String userName = tokenService.findUserByToken(token);
+        List<FileMyDB> files = fileService.getFilesByUser(userName);
+        List<FileForList> filesList = new ArrayList<>();
+        for (int i = 0; ((i < files.size()) && (i < limit)); i++) {
+            filesList.add(new FileForList(files.get(i).getFilename(), files.get(i).getData().length));
+        }
+        String resp = new Gson().toJson(filesList);
+        return new ResponseEntity(resp, HttpStatus.OK);
 
-        return ResponseEntity.status(HttpStatus.OK).body(files);
     }
 
     // *** Download file from server ***
-//    @GetMapping("/files/{fileName}")
-//    public ResponseEntity<byte[]> getFile(@PathVariable String fileName) {
-//        FileMyDB fileDB = storageService.getFile(fileName);
-//
-//        return ResponseEntity.ok()
-//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
-//                .body(fileDB.getData());
-//    }
+    @GetMapping("/file")
+    public ResponseEntity<byte[]> getFile(@RequestParam String filename,
+                                          @RequestHeader("auth-token") String token) {
+        String username = tokenService.findUserByToken(token);
+        FileMyDB fileDB = fileService.getFile(filename, username);
 
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getFilename() + "\"")
+                .body(fileDB.getData());
+    }
+
+    @DeleteMapping("/file")
+    public ResponseEntity deleteFile(@RequestParam String filename,
+                                     @RequestHeader("auth-token") String token) {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

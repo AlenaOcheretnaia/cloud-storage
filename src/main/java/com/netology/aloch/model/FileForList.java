@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LoginForm {
-    private String login;
-    private String password;
+public class FileForList {
+    private String filename;
+    private int size;
 
 }

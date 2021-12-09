@@ -15,6 +15,4 @@ public interface UserRepository extends JpaRepository<UserMyDB, String> {
 
     Optional<UserMyDB> findById(String login);
 
-    Optional<UserMyDB> findByToken(String token);
-
 }

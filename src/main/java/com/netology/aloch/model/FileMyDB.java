@@ -16,20 +16,19 @@ public class FileMyDB {
     private Integer id;
 
     @Column(nullable = false)
-    private String name;
+    private String filename;
 
     private String type;
 
     @Lob
     private byte[] data;
 
-    public String getId() {
-        return name;
-    }
+    private String username;
 
-    public FileMyDB(String name, String type, byte[] data) {
-        this.name = name;
+    public FileMyDB(String fileName, String type, byte[] data, String username) {
+        this.filename = fileName;
         this.type = type;
         this.data = data;
+        this.username = username;
     }
 }

@@ -1,26 +1,24 @@
 package com.netology.aloch;
 
 import com.netology.aloch.model.FileMyDB;
-import com.netology.aloch.model.UserFiles;
 import com.netology.aloch.model.UserMyDB;
+import com.netology.aloch.repository.FileRepository;
 import com.netology.aloch.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Component
 public class CloudStorageCommandLineApp implements CommandLineRunner {
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FileRepository fileRepository;
 
     @Override
     @Transactional
@@ -38,18 +36,12 @@ public class CloudStorageCommandLineApp implements CommandLineRunner {
 
         for (int i = 0; i < 5; i++) {
             var file = FileMyDB.builder()
-                    .name("filename" + (i + 1))
+                    .filename("filename" + (i + 1)+".txt")
                     .type("text/plain")
-                    .data(new byte[]{(byte) (i * 100)})
+                    .data(new byte[]{(byte) (i * 10000)})
+                    .username(users.get(i))
                     .build();
-            entityManager.persist(file);
-
-            var content = UserFiles.builder()
-                    .userName(users.get(i))
-                    .fileId(i + 1)
-                    .build();
-            entityManager.persist(content);
-
+            fileRepository.save(file);
         }
 
     }

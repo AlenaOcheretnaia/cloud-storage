@@ -1,7 +1,9 @@
 package com.netology.aloch.controller;
 
+import com.google.gson.Gson;
 import com.netology.aloch.model.ErrorApp;
-import com.netology.aloch.model.LoginForm;
+import com.netology.aloch.model.UserMyDB;
+import com.netology.aloch.service.TokenService;
 import com.netology.aloch.service.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 import java.util.List;
@@ -24,32 +27,36 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private TokenService tokenService;
 
-    //login
     @PostMapping("/login")
-    public ResponseEntity loginCheck(@RequestBody LoginForm loginForm) throws JSONException {
-        System.out.println("Login = " + loginForm.getLogin() + ", password = " + loginForm.getPassword());
-        if (userService.checkUserDB(loginForm.getLogin(), loginForm.getPassword())) {
-            String token = getJWTToken(loginForm.getLogin());
-            userService.assignTokenToUser(loginForm.getLogin(), token);
+    public ResponseEntity loginCheck(@RequestBody UserMyDB userLogin) {
+        if (userService.checkUserDB(userLogin.getLogin(), userLogin.getPassword())) {
+            String token = getJWTToken(userLogin.getLogin());
+            tokenService.assignTokenToUser(userLogin.getLogin(), token);
             JSONObject resp = new JSONObject();
-            resp.put("auth-token", token);
+            try {
+                resp.put("auth-token", token);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ErrorApp("Bad credentials", 400));
+            String errResp = new Gson().toJson(new ErrorApp("Bad Credentials", 400));
+            return new ResponseEntity<>(errResp, HttpStatus.valueOf(400));
         }
     }
 
-    @PostMapping("/logout")
-    public ResponseEntity logoutUser(@RequestHeader("auth-token") String token) {
-        if (!token.isEmpty()) {
-            userService.unAssignToken(token);
-            return new ResponseEntity(HttpStatus.OK);
-        } else {
-            return new ResponseEntity(HttpStatus.FORBIDDEN);
-        }
-    }
+//    @PostMapping("/logout")
+//    public ResponseEntity logoutUser(@RequestHeader("auth-token") String token) {
+//        if (!token.isEmpty()) {
+//            userService.unAssignToken(token);
+//            return new ResponseEntity<>(HttpStatus.OK);
+//        } else {
+//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+//        }
+//    }
 
     private String getJWTToken(String username) {
         String secretKey = "mySecretKey";
@@ -69,6 +76,6 @@ public class AuthController {
                 .signWith(SignatureAlgorithm.HS512,
                         secretKey.getBytes()).compact();
 
-        return "Bearer " + token;
+        return token;
     }
 }
