@@ -9,7 +9,6 @@
 //import javax.servlet.http.HttpServletRequest;
 //import javax.servlet.http.HttpServletResponse;
 //
-//import com.netology.aloch.repository.TokenRepository;
 //import com.netology.aloch.service.TokenService;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,22 +34,57 @@
 //    @Override
 //    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
 //        try {
-//            String authenticationHeader = request.getHeader(HEADER);
-//            if (authenticationHeader == null || !tokenService.checkToken(authenticationHeader)) {
-//                String username = tokenService.findUserByToken(authenticationHeader);
-//            } else
-//                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//            if (checkJWTToken(request, response)) {
+//                Claims claims = validateToken(request);
+//                if (claims.get("authorities") != null) {
+//                    setUpSpringAuthentication(claims);
+//                } else {
+//                    SecurityContextHolder.clearContext();
+//                }
+//            }else {
+//                SecurityContextHolder.clearContext();
+//            }
+//            chain.doFilter(request, response);
 //        } catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException e) {
 //            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//            response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 //            return;
 //        }
 //    }
 //
+//    private Claims validateToken(HttpServletRequest request) {
+//        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+//        System.out.println("validateToken " + jwtToken);
+//        return Jwts.parser().setSigningKey(SECRET.getBytes()).parseClaimsJws(jwtToken).getBody();
+//    }
+//
+//    // *** Authentication method in Spring flow ***
+//    private void setUpSpringAuthentication(Claims claims) {
+//        @SuppressWarnings("unchecked")
+//        List<String> authorities = (List) claims.get("authorities");
+//
+//        UsernamePasswordAuthenticationToken auth =
+//                new UsernamePasswordAuthenticationToken(claims.getSubject(), null,
+//                authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+//        System.out.println("setUpSpringAuthentication = " + auth.toString());
+//        SecurityContextHolder.getContext().setAuthentication(auth);
+//
+//    }
+//
 //    private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
 //        String authenticationHeader = request.getHeader(HEADER);
-//        if (authenticationHeader == null || !tokenService.checkToken(authenticationHeader))
-//            return false;
-//        return true;
+//        System.out.println("SOUT checkJWTToken = " + authenticationHeader);
+//        if (authenticationHeader == null || !authenticationHeader.startsWith(PREFIX)) {
+//            try {
+//                String username = tokenService.findUserByToken(authenticationHeader);
+//                if (username.isEmpty()) {
+//                    return false;
+//                } else
+//                    return true;
+//            } catch (Exception e) {
+//                return false;
+//            }
+//        }  return false;
 //    }
 //
 //}

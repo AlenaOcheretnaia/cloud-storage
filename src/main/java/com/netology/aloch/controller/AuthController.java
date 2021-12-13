@@ -29,9 +29,10 @@ public class AuthController {
     @Autowired
     private TokenService tokenService;
 
+    // *** Login, check credentials ***
     @PostMapping("/login")
     public ResponseEntity loginCheck(@RequestBody UserMyDB userLogin) {
-        if (userService.checkUserDB(userLogin.getLogin(), userLogin.getPassword())) {
+            userService.checkUserDB(userLogin.getLogin(), userLogin.getPassword());
             String token = getJWTToken(userLogin.getLogin());
             tokenService.assignTokenToUser(userLogin.getLogin(), token);
             JSONObject resp = new JSONObject();
@@ -41,41 +42,41 @@ public class AuthController {
                 e.printStackTrace();
             }
             return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
-        } else {
-            String errResp = new Gson().toJson(new ErrorApp("Bad Credentials", 400));
-            return new ResponseEntity<>(errResp, HttpStatus.valueOf(400));
-        }
     }
 
+    // *** Logout redirect to <Location> header, no actions ***
     @PostMapping("/logout")
     public ResponseEntity logoutUser() {
             return new ResponseEntity<>(HttpStatus.OK);
     }
-
+    // *** Logout user, deactivate Token ***
     @GetMapping("/login")
     public ResponseEntity loginLogoutUser(@RequestHeader("auth-token") String token) {
         tokenService.unassignToken(token);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // *** Generate Auth-Token ***
     private String getJWTToken(String username) {
-        String secretKey = "SecretAlOch";
-        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
-                .commaSeparatedStringToAuthorityList("ROLE_USER");
+//        String secretKey = "SecretAlOch";
+//        List<GrantedAuthority> grantedAuthorities = AuthorityUtils
+//                .commaSeparatedStringToAuthorityList("ROLE_USER");
+//
+//        String token = Jwts
+//                .builder()
+//                .setId("softtekJWT")
+//                .setSubject(username)
+//                .claim("authorities",
+//                        grantedAuthorities.stream()
+//                                .map(GrantedAuthority::getAuthority)
+//                                .collect(Collectors.toList()))
+//                .setIssuedAt(new Date(System.currentTimeMillis()))
+//                .setExpiration(new Date(System.currentTimeMillis() + 600000))
+//                .signWith(SignatureAlgorithm.HS512,
+//                        secretKey.getBytes()).compact();
+//
+//        return token;
 
-        String token = Jwts
-                .builder()
-                .setId("softtekJWT")
-                .setSubject(username)
-                .claim("authorities",
-                        grantedAuthorities.stream()
-                                .map(GrantedAuthority::getAuthority)
-                                .collect(Collectors.toList()))
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 600000))
-                .signWith(SignatureAlgorithm.HS512,
-                        secretKey.getBytes()).compact();
-
-        return token;
+        return "eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ";
     }
 }

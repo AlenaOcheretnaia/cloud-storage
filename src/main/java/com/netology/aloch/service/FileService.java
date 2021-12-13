@@ -1,5 +1,6 @@
 package com.netology.aloch.service;
 
+import com.netology.aloch.exceptions.ErrorDeleteFile;
 import com.netology.aloch.model.FileMyDB;
 import com.netology.aloch.model.UserMyDB;
 import com.netology.aloch.repository.FileRepository;
@@ -45,7 +46,11 @@ public class FileService {
     }
 
     public void deleteFileByFilename(String filename, String username) {
-        fileRepository.deleteByFilenameAndUsername(filename, username);
+        try {
+            fileRepository.deleteByFilenameAndUsername(filename, username);
+        } catch (Exception e) {
+            throw new ErrorDeleteFile("Error delete file");
+        }
     }
 
     public void editFilename(String oldFilename, String newFilename, String username) {

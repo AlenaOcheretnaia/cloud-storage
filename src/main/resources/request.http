@@ -1,0 +1,42 @@
+### Test data
+### user1 / pass1
+### auth-token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ
+
+###login user
+POST http://localhost:8081/login
+Content-Type: application/json
+
+{
+  "login": "user1",
+  "password": "pass1"
+}
+### list of files
+GET http://localhost:8081/list?limit=3
+auth-token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ
+
+### upload file
+POST http://localhost:8081/file?filename=555.txt
+auth-token:
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="555.txt"
+
+test
+--WebAppBoundary
+
+### edit file name
+
+PUT http://localhost:8081/file?filename=444.txt
+auth-token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ
+Content-Type: application/json
+
+{
+  "filename": ""
+}
+
+###
+
+DELETE http://localhost:8081/file?filename=filename1.txt
+auth-token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ
+
