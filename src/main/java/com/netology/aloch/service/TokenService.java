@@ -1,5 +1,6 @@
 package com.netology.aloch.service;
 
+import com.netology.aloch.exceptions.UnauthorizedError;
 import com.netology.aloch.model.UserToken;
 import com.netology.aloch.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,13 @@ public class TokenService {
     }
 
     public String findUserByToken(String token) {
-        UserToken userToken = tokenRepository.findByToken(token).get();
-        return userToken.getUsername();
+        try {
+            UserToken userToken = tokenRepository.findByToken(token).get();
+            return userToken.getUsername();
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
 //    public boolean checkToken(String tokenReq) {
