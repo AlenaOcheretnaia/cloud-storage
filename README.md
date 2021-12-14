@@ -1,6 +1,8 @@
 # cloudStorage
 
-
+###Test data
+user1/pass1 - filename1.txt
+user2/pass2 - filename2.txt
 
 ##Test via API (Postman or http request file)
 

@@ -12,15 +12,15 @@ Content-Type: application/json
 }
 ### list of files
 GET http://localhost:8081/list?limit=3
-auth-token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ
+auth-token: Bearer uyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTYzOTUxMjc4MywiaWF0IjoxNjM5NDk0NzgzfQ.sqDYwUIgzqbxfuWhLxOIInssNDhfJ5hT1MGHjfFWT_rjb7SwWLBRA4804IZ_qKAT8xT-dV_a18ULZBFmRTOuCQ
 
 ### upload file
-POST http://localhost:8081/file?filename=555.txt
-auth-token:
+POST http://localhost:8081/file?filename=557.txt
+auth-token: Bearer uyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTYzOTUxMjc4MywiaWF0IjoxNjM5NDk0NzgzfQ.sqDYwUIgzqbxfuWhLxOIInssNDhfJ5hT1MGHjfFWT_rjb7SwWLBRA4804IZ_qKAT8xT-dV_a18ULZBFmRTOuCQ
 Content-Type: multipart/form-data; boundary=WebAppBoundary
 
 --WebAppBoundary
-Content-Disposition: form-data; name="file"; filename="555.txt"
+Content-Disposition: form-data; name="file"; filename="557.txt"
 
 test
 --WebAppBoundary
@@ -37,6 +37,5 @@ Content-Type: application/json
 
 ###
 
-DELETE http://localhost:8081/file?filename=filename1.txt
-auth-token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ
-
+DELETE http://localhost:8081/file?filename=948.txt
+auth-token: Bearer pyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMyIsImV4cCI6MTYzOTY4MTczNSwiaWF0IjoxNjM5NTAxNzM1fQ.PRfJaKu2esDx3Uh6QLJbdyGrqMzloRF64FOhaqPC4k6uoDk5kNPKcZMGVZ_zVTQSIfAuoaJO7WGHoOnvmCr1kw

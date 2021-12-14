@@ -12,7 +12,7 @@ public class TokenService {
     private TokenRepository tokenRepository;
 
     public void assignTokenToUser(String username, String token) {
-        UserToken userToken = new UserToken(username, "Bearer " + token);
+        UserToken userToken = new UserToken(username, token);
         tokenRepository.save(userToken);
     }
 
@@ -25,13 +25,13 @@ public class TokenService {
         return userToken.getUsername();
     }
 
-    public boolean checkToken(String tokenReq) {
-        try {
-            tokenRepository.findByToken(tokenReq).get();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+//    public boolean checkToken(String tokenReq) {
+//        try {
+//            tokenRepository.findByToken(tokenReq).get();
+//            return true;
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
 
 }

@@ -19,7 +19,7 @@ public class ExceptionAdvice {
     @ExceptionHandler(ErrorInputData.class)
     public ResponseEntity<String> handleErrorInputDataE(ErrorInputData e) {
         String errResp = new Gson().toJson(new ErrorApp("Error Input Data", 400));
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errResp);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errResp);
     }
 
     @ExceptionHandler(UnauthorizedError.class)
