@@ -9,12 +9,15 @@
  - авторизация пользователя.   
  Все настройки приложения хранятся в файле настроек (yml).
  
-Протокол получения и отправки сообщений между FRONT и BACKEND описан в [yaml file](https://github.com/netology-code/jd-homeworks/blob/master/diploma/CloudServiceSpecification.yaml).
+Протокол получения и отправки сообщений между FRONT и BACKEND описан в [yaml file](https://github.com/netology-code/jd-homeworks/blob/master/diploma/CloudServiceSpecification.yaml).  
+Схему работы приложения (BACKEND) можно посмотреть на [схеме](https://github.com/AlenaOcheretnaia/cloud-storage/blob/main/docs/Схема%20работы%20cloudStorage.png).
  
 Информация о пользователях сервиса (логины для авторизации) и данных должны хранятся в базе данных **MySQL**. 
- Установите базу данных и пропишите username/password к базе в настройках приложения.
+Установите базу данных и пропишите username/password к базе в настройках приложения.
  
 `docker run -v /mysql_data:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=mysql -p 3306:3306  mysql`
+
+Структуру таблиц базы данных, можно найти в файле [Структура таблиц БД](https://github.com/AlenaOcheretnaia/cloud-storage/blob/main/docs/Структура%20таблиц%20БД.png)
 
 ###### Test data
 
