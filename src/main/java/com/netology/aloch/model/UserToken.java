@@ -16,7 +16,7 @@ public class UserToken {
     @Column(nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
     private String token;
 
     public UserToken(String username, String token) {
