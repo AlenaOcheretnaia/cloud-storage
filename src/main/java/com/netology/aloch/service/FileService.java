@@ -1,7 +1,6 @@
 package com.netology.aloch.service;
 
-import com.netology.aloch.auth.JwtTokenUtil;
-import com.netology.aloch.exceptions.ErrorDeleteFile;
+
 import com.netology.aloch.exceptions.ErrorInputData;
 import com.netology.aloch.model.FileMyDB;
 import com.netology.aloch.repository.FileRepository;
@@ -19,11 +18,11 @@ public class FileService {
     @Autowired
     private FileRepository fileRepository;
     @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private TokenService tokenService;
 
     public void store(MultipartFile file, String token) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String userName = jwtTokenUtil.getUsernameFromToken(token);
+        String userName = tokenService.findUserByToken(token);
         if (fileRepository.findByFilenameAndUsername(fileName, userName).isEmpty()) {
             FileMyDB FileDB = new FileMyDB(fileName, file.getContentType(), file.getBytes(), userName);
             fileRepository.save(FileDB);

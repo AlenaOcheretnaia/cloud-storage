@@ -1,7 +1,7 @@
 package com.netology.aloch.controller;
 
 import com.google.gson.Gson;
-import com.netology.aloch.auth.JwtTokenUtil;
+
 import com.netology.aloch.exceptions.ErrorInputData;
 import com.netology.aloch.exceptions.UnauthorizedError;
 import com.netology.aloch.model.ErrorApp;
@@ -30,8 +30,6 @@ public class FilesController {
     private FileService fileService;
     @Autowired
     private TokenService tokenService;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
     public FilesController(FileService fileStorageService) {
         this.fileService = fileStorageService;
@@ -47,7 +45,7 @@ public class FilesController {
     public ResponseEntity getListFiles(@RequestParam int limit,
                                        @RequestHeader("auth-token") String token) {
 
-        String userName = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+        String userName = tokenService.findUserByToken(token.substring(7));
         List<FileMyDB> files = fileService.getFilesByUser(userName);
         List<FileForList> filesList = new ArrayList<>();
         for (int i = 0; ((i < files.size()) && (i < limit)); i++) {
@@ -85,7 +83,7 @@ public class FilesController {
                                        @RequestHeader("auth-token") String token,
                                        @RequestBody HashMap<String, String> values) {
         String newFilename = values.get("filename");
-        String username = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+        String username = tokenService.findUserByToken(token.substring(7));
         fileService.editFilename(oldFilename, newFilename, username);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -94,7 +92,7 @@ public class FilesController {
     @GetMapping("/file")
     public ResponseEntity<?> getFile(@RequestParam String filename,
                                           @RequestHeader("auth-token") String token) {
-        String username = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+        String username = tokenService.findUserByToken(token.substring(7));
         FileMyDB fileDB = fileService.getFile(filename, username);
         if (fileDB == null) {
             String errResp = new Gson().toJson(new ErrorApp("Error Input Data", 400));
@@ -115,7 +113,7 @@ public class FilesController {
         } else if (token.isEmpty() || (token == null)) {
             throw new UnauthorizedError("Unauthorized error");
         }
-        String username = jwtTokenUtil.getUsernameFromToken(token.substring(7));
+        String username = tokenService.findUserByToken(token.substring(7));
 
         fileService.deleteFileByFilename(filename, username);
         return new ResponseEntity<>(HttpStatus.OK);

@@ -1,7 +1,5 @@
 package com.netology.aloch.controller;
 
-import com.netology.aloch.auth.JwtTokenUtil;
-import com.netology.aloch.auth.JwtUserDetailsService;
 import com.netology.aloch.exceptions.BadCredentials;
 import com.netology.aloch.model.UserMyDB;
 import com.netology.aloch.service.TokenService;
@@ -17,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin(origins = "http://localhost:8080")
 public class AuthController {
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
+
     @Autowired
     private UserService userService;
     @Autowired
@@ -31,13 +26,8 @@ public class AuthController {
     public ResponseEntity<?> createAuthenticationToken(@RequestBody UserMyDB authenticationRequest) {
 
         if (userService.checkUserDB(authenticationRequest.getLogin(), authenticationRequest.getPassword())) {
-            final UserDetails userDetails = userDetailsService
-                    .loadUserByUsername(authenticationRequest.getLogin());
-
-            final String token = jwtTokenUtil.generateToken(userDetails);
-
+            String token = userService.login(authenticationRequest.getLogin(),authenticationRequest.getPassword());
             tokenService.assignTokenToUser(authenticationRequest.getLogin(), token);
-
             JSONObject resp = new JSONObject();
             try {
                 resp.put("auth-token", token);
@@ -49,6 +39,23 @@ public class AuthController {
             throw new BadCredentials("Bad Credentials");
         }
     }
+//            final UserDetails userDetails = userDetailsService
+//                    .loadUserByUsername(authenticationRequest.getLogin());
+//
+//            final String token = jwtTokenUtil.generateToken(userDetails);
+//
+//            tokenService.assignTokenToUser(authenticationRequest.getLogin(), token);
+//
+//            JSONObject resp = new JSONObject();
+//            try {
+//                resp.put("auth-token", token);
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            return new ResponseEntity<>(resp.toString(), HttpStatus.OK);
+//        } else {
+//            throw new BadCredentials("Bad Credentials");
+//        }
 
     // *** Logout redirect to <Location> header, no actions ***
     @PostMapping("/logout")
