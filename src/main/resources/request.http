@@ -27,12 +27,12 @@ test
 
 ### edit file name
 
-PUT http://localhost:8081/file?filename=444.txt
-auth-token: Bearer eyJhbGciOiJIUzUxMiJ9.eyJqdGkiOiJzb2Z0dGVrSldUIiwic3ViIjoidXNlcjEiLCJhdXRob3JpdGllcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNjM5NDE3MDc1LCJleHAiOjE2Mzk0MTc2NzV9.RiTNcwcqh-d4LQ3MkNlfFTn68nUy5aLhLOkqEl743ssgk23HC0keL8ZAIDDas1oqHOpwYn5Yi7TyphRVZ6Z5XQ
+PUT http://localhost:8081/file?filename=601.txt
+auth-token: Bearer yJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyMSIsImV4cCI6MTY0MjE5OTUxMiwiaWF0IjoxNjQyMDE5NTEyfQ.CZXOp55hv2k1M8EtHhzF6QjZffOzTYYKFWQR8E-Ag45EFCHNkyQ0ALAzpcVHLlmOBXIvSOmxg3inuFX22Yk1yA
 Content-Type: application/json
 
 {
-  "filename": ""
+  "filename": "444.txt"
 }
 
 ###

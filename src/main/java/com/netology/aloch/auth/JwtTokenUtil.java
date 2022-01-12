@@ -19,7 +19,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtTokenUtil implements Serializable {
 
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 60 * 60 * 1000;
 
     @Autowired
     private TokenService tokenService;
@@ -65,7 +65,7 @@ public class JwtTokenUtil implements Serializable {
     //   compaction of the JWT to a URL-safe string
     private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY*10000))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
@@ -75,8 +75,10 @@ public class JwtTokenUtil implements Serializable {
         String userByToken = tokenService.findUserByToken(token);
         if (userByToken == null) {
             return false;
-        } else {
-            return (username.equals(userByToken) && !isTokenExpired(token));
         }
+        if (isTokenExpired(token)){
+            return false;
+        }
+        return (username.equals(userByToken));
     }
 }
