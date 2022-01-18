@@ -3,6 +3,8 @@ package com.netology.aloch.config;
 import com.netology.aloch.auth.JwtAuthenticationEntryPoint;
 import com.netology.aloch.auth.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +22,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -31,6 +34,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
+
+    @Value("${cors.origins}")
+    private List<String> corsAllowedOrigins;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -48,19 +54,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
+        CorsConfiguration corsConfig = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:8080"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setMaxAge(Long.valueOf(3600));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
-        configuration.setAllowCredentials(true);
+        corsConfig.setAllowedOrigins(corsAllowedOrigins);
+        corsConfig.setAllowedHeaders(List.of("*"));
+        corsConfig.setMaxAge(Long.valueOf(3600));
+        corsConfig.setAllowedMethods(Arrays.asList("GET", "POST", "OPTIONS", "PUT", "DELETE"));
+        corsConfig.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/**", corsConfig);
 
         return source;
     }
+
 
     @Bean
     @Override
