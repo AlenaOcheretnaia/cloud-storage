@@ -24,11 +24,11 @@ import java.util.List;
 @RestController
 public class FilesController {
 
-    @Autowired
     private FileService fileService;
 
-    public FilesController(FileService fileStorageService) {
-        this.fileService = fileStorageService;
+    @Autowired
+    public FilesController(FileService fileService) {
+        this.fileService = fileService;
     }
 
     @GetMapping("/")

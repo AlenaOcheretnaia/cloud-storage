@@ -12,14 +12,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
-    @Autowired
     private TokenService tokenService;
+    private JwtTokenUtil jwtTokenUtil;
+    private JwtUserDetailsService jwtUserDetailsService;
+
+    @Autowired
+    public UserService(UserRepository userRepository, TokenService tokenService, JwtTokenUtil jwtTokenUtil, JwtUserDetailsService jwtUserDetailsService) {
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.jwtUserDetailsService = jwtUserDetailsService;
+    }
 
     public boolean checkUserDB(String login, String password) {
         return !userRepository.findByLoginAndPassword(login, password).isEmpty();
@@ -35,7 +39,7 @@ public class UserService {
 
     public String getToken(String login, String password) {
         if (checkUserDB(login, password)) {
-            final UserDetails userDetails = userDetailsService
+            final UserDetails userDetails = jwtUserDetailsService
                     .loadUserByUsername(login);
 
             final String token = jwtTokenUtil.generateToken(userDetails);

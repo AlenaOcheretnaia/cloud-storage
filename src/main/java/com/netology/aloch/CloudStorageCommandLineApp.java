@@ -14,11 +14,14 @@ import java.util.List;
 @Component
 public class CloudStorageCommandLineApp implements CommandLineRunner {
 
-    @Autowired
     private UserRepository userRepository;
+    private FileRepository fileRepository;
 
     @Autowired
-    private FileRepository fileRepository;
+    public CloudStorageCommandLineApp(UserRepository userRepository, FileRepository fileRepository) {
+        this.userRepository = userRepository;
+        this.fileRepository = fileRepository;
+    }
 
     @Override
     @Transactional

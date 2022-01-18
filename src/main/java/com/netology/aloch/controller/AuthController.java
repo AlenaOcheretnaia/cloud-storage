@@ -15,10 +15,14 @@ import java.util.Map;
 @RestController
 public class AuthController {
 
-    @Autowired
     private UserService userService;
-    @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    public AuthController (UserService userService, TokenService tokenService) {
+        this.userService = userService;
+        this.tokenService = tokenService;
+    }
 
     // *** Login, Check credentials, Get Token ***
     @PostMapping(value = "/login")

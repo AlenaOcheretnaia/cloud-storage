@@ -17,8 +17,12 @@ import java.util.List;
 @Service
 public class FileService {
 
-    @Autowired
     private FileRepository fileRepository;
+
+    @Autowired
+    public FileService(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
 
     public void store(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());

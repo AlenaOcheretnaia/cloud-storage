@@ -21,8 +21,12 @@ public class JwtTokenUtil implements Serializable {
 
     public static final long JWT_TOKEN_VALIDITY = 60 * 60 * 1000;
 
-    @Autowired
     private TokenService tokenService;
+
+    @Autowired
+    public JwtTokenUtil(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     @Value("${jwt.secret}")
     private String secret;
