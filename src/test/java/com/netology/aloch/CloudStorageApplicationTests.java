@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 class CloudStorageApplicationTests {
 
 	@Test
-	void contextLoads() {
+	void checkUserBDTest() {
+
 	}
 
 }

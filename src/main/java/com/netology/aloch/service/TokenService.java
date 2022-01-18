@@ -1,9 +1,9 @@
 package com.netology.aloch.service;
 
-import com.netology.aloch.exceptions.UnauthorizedError;
 import com.netology.aloch.model.UserToken;
 import com.netology.aloch.repository.TokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +19,7 @@ public class TokenService {
 
     public void unassignToken(String token) {
         tokenRepository.deleteByToken(token);
+        SecurityContextHolder.clearContext();
     }
 
     public String findUserByToken(String token) {
@@ -30,14 +31,5 @@ public class TokenService {
         }
 
     }
-
-//    public boolean checkToken(String tokenReq) {
-//        try {
-//            tokenRepository.findByToken(tokenReq).get();
-//            return true;
-//        } catch (Exception e) {
-//            return false;
-//        }
-//    }
 
 }

@@ -6,6 +6,7 @@ import com.netology.aloch.exceptions.ErrorInputData;
 import com.netology.aloch.model.FileMyDB;
 import com.netology.aloch.repository.FileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,17 +19,15 @@ public class FileService {
 
     @Autowired
     private FileRepository fileRepository;
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
 
-    public void store(MultipartFile file, String token) throws IOException {
+    public void store(MultipartFile file) throws IOException {
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String userName = jwtTokenUtil.getUsernameFromToken(token);
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         if (fileRepository.findByFilenameAndUsername(fileName, userName).isEmpty()) {
             FileMyDB FileDB = new FileMyDB(fileName, file.getContentType(), file.getBytes(), userName);
             fileRepository.save(FileDB);
         } else {
-            throw new ErrorInputData("Such file already uploaded");
+            throw new ErrorInputData("Such file is already uploaded");
         }
     }
 
